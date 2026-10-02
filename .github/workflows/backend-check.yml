@@ -1,0 +1,19 @@
+name: Check backend
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install backend dependencies
+        run: pip install -r backend/requirements.txt
+      - name: Compile backend
+        run: python -m py_compile backend/main.py
+      - name: Import FastAPI app
+        run: python -c "import sys; sys.path.insert(0, 'backend'); import main; assert main.app is not None"
